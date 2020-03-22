@@ -1,11 +1,14 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive>
+      <router-view />
+    </keep-alive>
     <mainTabbar></mainTabbar>
   </div>
 </template>
 
 <script>
+
 import mainTabbar from 'components/content/mainTabbar/mainTabbar.vue'
 
 export default {

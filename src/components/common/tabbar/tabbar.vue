@@ -7,11 +7,6 @@
 <script>
 export default {
   name: 'Tabbar',
-  data () {
-    return {
-
-    }
-  }
 }
 </script>
 

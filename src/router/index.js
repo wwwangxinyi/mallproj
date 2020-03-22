@@ -6,6 +6,7 @@ const Home = () => import('views/home/home.vue')
 const Cart = () => import('views/cart/cart.vue')
 const Category = () => import('views/category/category.vue')
 const Profile = () => import('views/profile/profile.vue')
+const Detail = () => import('views/detail/detail.vue')
 
 const routes = [{
     path: '',
@@ -26,6 +27,10 @@ const routes = [{
   {
     path: '/profile',
     component: Profile
+  },
+  {
+    path: '/detail/:id',
+    component: Detail
   }
 ]
 

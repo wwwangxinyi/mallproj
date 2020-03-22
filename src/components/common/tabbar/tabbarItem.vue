@@ -1,6 +1,8 @@
 <template>
-  <div class="tabbarItem"
-       @click="itemClick()">
+  <div
+    class="tabbarItem"
+    @click="itemClick()"
+  >
     <slot v-if="!isActivate">
       <slot name="item-icon"></slot>
     </slot>
@@ -33,7 +35,6 @@ export default {
   },
   methods: {
     itemClick () {
-      console.log("click")
       this.$router.push(this.path).catch(err => { })
     }
   }
