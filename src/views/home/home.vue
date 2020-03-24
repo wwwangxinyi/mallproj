@@ -8,15 +8,15 @@
       :titles="['流行','新款','精选']"
       @tabClick='tabClick'
       class="tabControl"
-      v-if="isShowTab"
+      v-show="isShowTab"
     />
     <BScroll
       class="content"
       ref="scroll"
       @scroll="contentScroll"
+      @pullingUp="LoadMore"
       :probeType="3"
       :pull-up-load="true"
-      @pullingUp="LoadMore"
     >
       <!-- scroll必须设定高度 -->
       <HomeSwiper
@@ -53,6 +53,9 @@ import Feature from './components/homeFeature';
 
 import { getHomeMultiData, getHomeGoods } from "network/home.js";
 
+import { itemListenerMixin } from "common/mixin.js";
+import { debounce } from 'common/utils'
+
 export default {
   name: 'home',
   components: {
@@ -77,11 +80,12 @@ export default {
       },
       currentType: 'pop',
       isShowBack: false,
-      tabOfffset: 0,
+      tabOffset: 0,
       isShowTab: false,
       saveY: 0
     }
   },
+  mixins: [itemListenerMixin],
   computed: {
     showGoods () {
       return this.goods[this.currentType].list
@@ -103,10 +107,11 @@ export default {
         default:
           this.currentType = 'pop'
       }
-      this.$refs.tabControl1.currentIndex = index;
-      this.$refs.tabControl2.currentIndex = index;
+      this.$refs.tabControl1.currentIdx = index;
+      this.$refs.tabControl2.currentIdx = index;
     },
     backToTop () {
+      console.log('work')
       this.$refs.scroll.scrollTo(0, 0)
     },
     contentScroll (pos) {
@@ -114,35 +119,20 @@ export default {
       this.isShowBack = -pos.y > 1200
 
       //判断是否显示吸顶元素
-      this.isShowTab = -pos.y > this.tabOfffset
+      this.isShowTab = -pos.y > this.tabOffset
     },
     LoadMore () {
       console.log('more')
       this.GetHomeGoods(this.currentType)
     },
-    //防抖函数
-    //如果直接执行refresh，将执行30次
-    //将refresh函数传入debouce函数中，生成一个新函数
-    debounce (func, delay) {
-      let timer = null//虽然是局部变量，但是被闭包函数引用后，不被销毁
-
-      return function (...args) {
-        //reset timer //将先前延迟执行的函数取消 直至最后一次
-        if (timer) clearTimeout(timer)
-        timer = setTimeout(() => {
-          func.apply(this, args)
-        }, delay)
-      }
-    },
     swiperImgLoad () {
-      this.tabOfffset = this.$refs.tabControl2.$el.offsetTop
+      this.tabOffset = this.$refs.tabControl2.$el.offsetTop
     },
     /*************网络请求*************/
     GetHomeMultiData () {
       getHomeMultiData().then(res => {
         this.banners = res.data.banner.list
         this.recommends = res.data.recommend.list
-        //console.log(res)
       })
     },
     GetHomeGoods (type) {
@@ -164,21 +154,15 @@ export default {
     this.GetHomeGoods('sell')
   },
   mounted () {
-    //监听图片加载完成
-    const refresh = this.debounce(this.$refs.scroll.refresh)//传递函数 无()
-    this.$bus.$on('imgLoad', () => {
-      refresh()
-    })
-
-    //吸顶效果
-    this.tabOfffset = this.$refs.tabControl2.$el.offsetTop
   },
   activated () {
+    console.log(this.saveY)
     this.$refs.scroll.scrollTo(0, this.saveY, 0)//(x,y,time=0)
     this.$refs.scroll.refresh()
   },
   deactivated () {
     this.saveY = this.$refs.scroll.getposY()
+    this.$bus.$off('imgLoad', this.itemImgListener)
     console.log(this.saveY)
   }
 }

@@ -4,7 +4,7 @@
     @click="itemClick"
   >
     <img
-      :src="goodsItem.show.img"
+      :src="showImage"
       @load="imgLoad"
     >
     <div class="goods-info">
@@ -26,13 +26,17 @@ export default {
       }
     }
   },
+  computed: {
+    showImage () {
+      return (this.goodsItem.image || this.goodsItem.show.img)
+    }
+  },
   methods: {
     imgLoad () {
       this.$bus.$emit('imgLoad')
     },
     itemClick () {
-      console.log('click')
-      this.$router.push('/detail/' + this.goodsItem.iid)
+      this.$router.push('/detail/' + this.goodsItem.iid)//动态路由
     }
   }
 }
