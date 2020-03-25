@@ -43,9 +43,7 @@ export default {
   methods: {
     imgLoad () {
       this.counter++
-      console.log('imgload')
       if (this.counter === this.imageSize) {
-        console.log(this.imageSize)
         this.$bus.$emit('imgLoad')
       }
     }

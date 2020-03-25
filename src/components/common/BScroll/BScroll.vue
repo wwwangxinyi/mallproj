@@ -36,7 +36,6 @@ export default {
       //监听实时滚动并发送
       if (this.probeType === 2 || this.probeType === 3) {
         this.scroll.on('scroll', (pos) => {
-          //console.log(pos)
           this.$emit('scroll', pos)//自定义事件scroll
         })
       }
@@ -56,7 +55,6 @@ export default {
     },
     refresh () {
       this.scroll && this.scroll.refresh && this.scroll.refresh()
-      console.log('refresh')
     },
     getposY () {
       return this.scroll ? this.scroll.y : 0
@@ -69,7 +67,6 @@ export default {
   },
   mounted () {
     setTimeout(this.__initScroll, 20);
-    console.log('init')
   }
 }
 </script>

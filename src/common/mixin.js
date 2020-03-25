@@ -8,7 +8,7 @@ export const itemListenerMixin = {
     }
   },
   mounted() {
-    let newRefresh = debounce(this.$refs.scroll.refresh, 50) //传递函数 无()
+    const newRefresh = debounce(this.$refs.scroll.refresh, 50) //传递函数 无()
     this.itemImgListener = () => {
       newRefresh()
     }
@@ -19,18 +19,25 @@ export const itemListenerMixin = {
 import {
   POP,
   NEW,
-  SELL
+  SELL,
+  BACKTOP_DISTANCE
 } from "./const";
-
+import BackToTop from 'components/content/backToTop/backToTop.vue';
 export const backTopMixin = {
   data: function () {
     return {
-      showBackTop: false
+      showBackTop: false,
     }
+  },
+  components: {
+    BackToTop
   },
   methods: {
     backTop: function () {
       this.$refs.scroll.scrollTo(0, 0, 300);
+    },
+    listenShowBack(pos) {
+      this.showBackTop = -pos.y > BACKTOP_DISTANCE
     }
   }
 }

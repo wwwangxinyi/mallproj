@@ -17,6 +17,6 @@ export default {
 .back-to-top {
   position: fixed;
   right: 10px;
-  bottom: 50px;
+  bottom: 52px;
 }
 </style>

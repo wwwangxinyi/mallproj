@@ -33,8 +33,8 @@
       <goodsList :goods=showGoods />
     </BScroll>
     <BackToTop
-      @click.native="backToTop"
-      v-show="isShowBack"
+      @click.native="backTop"
+      v-show="showBackTop"
     />
   </div>
 </template>
@@ -53,9 +53,8 @@ import Feature from './components/homeFeature';
 
 import { getHomeMultiData, getHomeGoods } from "network/home.js";
 
-import { itemListenerMixin } from "common/mixin.js";
+import { itemListenerMixin, backTopMixin } from "common/mixin.js";
 import { debounce } from 'common/utils'
-
 export default {
   name: 'home',
   components: {
@@ -65,8 +64,7 @@ export default {
     Feature,
     tabControl,
     goodsList,
-    BScroll,
-    BackToTop
+    BScroll
   },
   data () {
     return {
@@ -79,13 +77,13 @@ export default {
         'sell': { page: 0, list: [] },
       },
       currentType: 'pop',
-      isShowBack: false,
+      showBackTop: false,
       tabOffset: 0,
       isShowTab: false,
       saveY: 0
     }
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   computed: {
     showGoods () {
       return this.goods[this.currentType].list
@@ -110,19 +108,17 @@ export default {
       this.$refs.tabControl1.currentIdx = index;
       this.$refs.tabControl2.currentIdx = index;
     },
-    backToTop () {
-      console.log('work')
-      this.$refs.scroll.scrollTo(0, 0)
-    },
+    // backToTop () {
+    //   this.$refs.scroll.scrollTo(0, 0, 300)
+    // },
     contentScroll (pos) {
       //判断是否展示back-to-top
-      this.isShowBack = -pos.y > 1200
+      this.listenShowBack(pos)
 
       //判断是否显示吸顶元素
       this.isShowTab = -pos.y > this.tabOffset
     },
     LoadMore () {
-      console.log('more')
       this.GetHomeGoods(this.currentType)
     },
     swiperImgLoad () {
@@ -156,14 +152,12 @@ export default {
   mounted () {
   },
   activated () {
-    console.log(this.saveY)
     this.$refs.scroll.scrollTo(0, this.saveY, 0)//(x,y,time=0)
     this.$refs.scroll.refresh()
   },
   deactivated () {
     this.saveY = this.$refs.scroll.getposY()
     this.$bus.$off('imgLoad', this.itemImgListener)
-    console.log(this.saveY)
   }
 }
 </script>
