@@ -4,7 +4,7 @@
     @click="itemClick"
   >
     <img
-      :src="showImage"
+      v-lazy="showImage"
       @load="imgLoad"
     >
     <div class="goods-info">

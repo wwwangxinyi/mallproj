@@ -33,7 +33,7 @@
       @click.native="backTop"
       v-show="showBackTop"
     />
-    <detailBottomBar @addToCart="addCart" />
+    <detailBottomBar @addCart="addCart" />
   </div>
 </template>
 
@@ -49,6 +49,7 @@ import detailBottomBar from './components/detailBottomBar.vue'
 
 import BScroll from "components/common/BScroll/BScroll.vue"
 import goodsList from 'components/content/goods/goodsList.vue'
+import toast from 'components/common/toast/toast.vue'
 
 import { getDetail, Goods, Shop, GoodsParam, getRecommend } from 'network/detail'
 
@@ -70,6 +71,8 @@ export default {
       recommends: [],
       themeTopYs: [],
       currentIdx: 0,
+      toastmessage: '',
+      isShow: true
     }
   },
   mixins: [itemListenerMixin, backTopMixin],
@@ -83,7 +86,8 @@ export default {
     detailCommentInfo,
     detailBottomBar,
     goodsList,
-    BScroll
+    BScroll,
+    toast
   },
   created () {
     //保存传入iid
@@ -142,7 +146,6 @@ export default {
       }
     },
     addCart () {
-      console.log("click")
       //获取购物车展示信息
       const product = {}
       product.image = this.topImages[0]
@@ -154,19 +157,18 @@ export default {
 
       //通过vuex将信息添加到购物车
       this.$store.dispatch('addToCart', product).then(res => {
-        //添加成功
-        console.log('res')
+        this.$toast.showToast('成功添加至购物车')
       })
 
     }
   },
-  mounted () {
-    // this.themeTopYs.push(0)
-    // this.themeTopYs.push(this.$refs.param.$el.offsetTop)
-    // this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
-    // this.themeTopYs.push(this.$refs.recommand.$el.offsetTop)
-    //>>0,undefined,undefined,
-  }
+  // mounted () {
+  //   // this.themeTopYs.push(0)
+  //   // this.themeTopYs.push(this.$refs.param.$el.offsetTop)
+  //   // this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+  //   // this.themeTopYs.push(this.$refs.recommand.$el.offsetTop)
+  //   //>>0,undefined,undefined,
+  // }
 }
 </script>
 

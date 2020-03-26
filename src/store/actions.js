@@ -15,6 +15,7 @@ export default {
       } else {
         commit('initInCart', payload)
       }
+      resolve(1) //调用resolve 否则不执行then
     })
   }
 }
